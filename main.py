@@ -40,3 +40,37 @@ messages = [
 
 response = model.invoke(messages)
 print(response.content)
+
+# open AI format
+# print("Open AI formatted calls:")
+# response = model.invoke("Hello")
+# print(response.content)
+# response = model.invoke([{"role": "user", "content": "Hello"}])
+# print(response.content)
+# response = model.invoke([HumanMessage("Hello")])
+# print(response.content)
+
+
+# streaming
+
+for token in model.stream(messages):
+    print(token.content, end="|")
+
+
+# using Prompt Template
+
+from langchain_core.prompts import ChatPromptTemplate
+
+system_template = "Translate the following from English into {language}"
+
+prompt_template = ChatPromptTemplate.from_messages(
+    [("system", system_template), ("user", "{text}")]
+)
+
+prompt = prompt_template.invoke({"language": "Italian", "text": "hi!"})
+print('Prompt created using prompt template')
+print(prompt)
+print(prompt.to_messages())
+print('Model Response:')
+response = model.invoke(prompt)
+print(response.content)
